@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeply", "Deeply\Deeply.csproj", "{8EF45814-C90E-44B5-B554-8065D6438AE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeply.Tests", "Deeply.Tests\Deeply.Tests.csproj", "{7FF3F35A-6D83-48A4-90DF-C928F95F80A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EF45814-C90E-44B5-B554-8065D6438AE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF45814-C90E-44B5-B554-8065D6438AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF45814-C90E-44B5-B554-8065D6438AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF45814-C90E-44B5-B554-8065D6438AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FF3F35A-6D83-48A4-90DF-C928F95F80A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FF3F35A-6D83-48A4-90DF-C928F95F80A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FF3F35A-6D83-48A4-90DF-C928F95F80A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FF3F35A-6D83-48A4-90DF-C928F95F80A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
