@@ -36,8 +36,8 @@ namespace Deeply
         /// </summary>
         /// <param name="tasks">A sequence of tasks.</param>
         protected CompositeTask(IEnumerable<ITask> tasks)
+            : this(TaskBase.NextTaskName(), tasks)
         {
-            this.tasks = tasks;
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace Deeply
         /// </summary>
         /// <param name="context">Verification context.</param>
         /// <returns>A task that represents the completion of this verification.</returns>
-        protected override async Task VerifyInternal(ITaskContext context)
+        protected override async Task VerifyInternalAsync(ITaskContext context)
         {
-            await base.VerifyInternal(context);
+            await base.VerifyInternalAsync(context);
 
             var waits = new List<Task>();
 

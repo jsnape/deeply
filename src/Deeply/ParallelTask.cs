@@ -72,7 +72,7 @@ namespace Deeply
         /// </summary>
         /// <param name="context">Verification context.</param>
         /// <returns>A task that represents the completion of this execution.</returns>
-        protected override async Task ExecuteInternal(ITaskContext context)
+        protected override async Task ExecuteInternalAsync(ITaskContext context)
         {
             var waits = new List<Task>();
 

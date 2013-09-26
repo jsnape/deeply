@@ -28,7 +28,7 @@ namespace Deeply
     public abstract class TaskBase : ITask
     {
         /// <summary>
-        /// Helper instance for async functions that are never await.
+        /// Helper instance for asynchronous functions that are never await.
         /// </summary>
         private static readonly Task CompleteTask = Task.FromResult(0);
 
@@ -48,7 +48,7 @@ namespace Deeply
         protected TaskBase()
         {
             this.Enabled = true;
-            this.name = string.Format(CultureInfo.CurrentCulture, "Task{0}", ++nextId);
+            this.name = NextTaskName();
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Deeply
 
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            await this.ExecuteInternal(context);
+            await this.ExecuteInternalAsync(context);
         }
 
         /// <summary>
@@ -156,7 +156,16 @@ namespace Deeply
 
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            await this.VerifyInternal(context);
+            await this.VerifyInternalAsync(context);
+        }
+
+        /// <summary>
+        /// Helper function to return a default task name.
+        /// </summary>
+        /// <returns>A string containing a unique task name.</returns>
+        protected static string NextTaskName()
+        {
+            return string.Format(CultureInfo.CurrentCulture, "Task{0}", ++nextId);
         }
 
         /// <summary>
@@ -164,14 +173,14 @@ namespace Deeply
         /// </summary>
         /// <param name="context">Verification context.</param>
         /// <returns>A task that represents the completion of this execution.</returns>
-        protected abstract Task ExecuteInternal(ITaskContext context);
+        protected abstract Task ExecuteInternalAsync(ITaskContext context);
 
         /// <summary>
         /// Implementation function for the verification.
         /// </summary>
         /// <param name="context">Verification context.</param>
         /// <returns>A task that represents the completion of this verification.</returns>
-        protected virtual Task VerifyInternal(ITaskContext context)
+        protected virtual Task VerifyInternalAsync(ITaskContext context)
         {
             return Complete;
         }

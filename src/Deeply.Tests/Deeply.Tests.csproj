@@ -44,6 +44,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.6.1.0\lib\NET40\NSubstitute.dll</HintPath>
+    </Reference>
     <Reference Include="Ploeh.AutoFixture">
       <HintPath>..\packages\AutoFixture.3.6.8\lib\net40\Ploeh.AutoFixture.dll</HintPath>
     </Reference>
@@ -63,6 +66,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="ConsoleExecutionLogFacts.cs" />
+    <Compile Include="ExecuteSqlTaskFacts.cs" />
     <Compile Include="Fakes\FakeConsole.cs" />
     <Compile Include="Fakes\FakeTask.cs" />
     <Compile Include="Fixtures\DefaultTaskContextFixture.cs" />

@@ -71,7 +71,7 @@ namespace Deeply.Tests.Fakes
         /// </summary>
         /// <param name="context">Execution context.</param>
         /// <returns>A task that represents the completion of this execution.</returns>
-        protected override async Task ExecuteInternal(ITaskContext context)
+        protected override async Task ExecuteInternalAsync(ITaskContext context)
         {
             this.ExecuteWasCalled = true;
 
@@ -86,7 +86,7 @@ namespace Deeply.Tests.Fakes
         /// </summary>
         /// <param name="context">Verification context.</param>
         /// <returns>A task that represents the completion of this verification.</returns>
-        protected override async Task VerifyInternal(ITaskContext context)
+        protected override async Task VerifyInternalAsync(ITaskContext context)
         {
             this.VerifyWasCalled = true;
 
