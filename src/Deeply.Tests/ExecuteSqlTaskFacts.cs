@@ -34,7 +34,7 @@ namespace Deeply.Tests
         /// <summary>
         /// Default connection factory.
         /// </summary>
-        IDbConnectionFactory connectionFactory = new DbConnectionFactory("Data Source=(localdb)\v11.0");
+        private IDbConnectionFactory connectionFactory = new DbConnectionFactory("Data Source=(localdb)\v11.0");
 
         /// <summary>
         /// Throws when null connection factory passed.
@@ -105,7 +105,7 @@ namespace Deeply.Tests
 
             var query = "select top 1 * from sys.objects";
 
-            var task = new ExecuteSqlTask(factory, "select top 1 * from sys.objects");
+            var task = new ExecuteSqlTask(factory, query);
             
             task.Execute(this.Context);
 

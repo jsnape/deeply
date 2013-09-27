@@ -34,6 +34,11 @@ namespace Deeply
         private readonly string connectionString;
 
         /// <summary>
+        /// Connection creation function.
+        /// </summary>
+        private readonly Func<string, IDbConnection> createFunction;
+
+        /// <summary>
         /// Cached exception raised by validation.
         /// </summary>
         private DbException exception;
@@ -43,6 +48,16 @@ namespace Deeply
         /// </summary>
         /// <param name="connectionString">Connection string for all connections.</param>
         public DbConnectionFactory(string connectionString)
+            : this(connectionString, c => new SqlConnection(c))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbConnectionFactory"/> class.
+        /// </summary>
+        /// <param name="connectionString">Connection string for all connections.</param>
+        /// <param name="createFunction">A <c>Func</c> used to create the internal connection.</param>
+        public DbConnectionFactory(string connectionString, Func<string, IDbConnection> createFunction)
         {
             if (connectionString == null)
             {
@@ -54,7 +69,13 @@ namespace Deeply
                 throw new ArgumentException("Connection string cannot be empty", "connectionString");
             }
 
+            if (createFunction == null)
+            {
+                throw new ArgumentNullException("createFunction");
+            }
+
             this.connectionString = connectionString;
+            this.createFunction = createFunction;
         }
 
         /// <summary>
@@ -63,7 +84,7 @@ namespace Deeply
         /// <returns>A connection.</returns>
         public IDbConnection CreateConnection()
         {
-            return new SqlConnection(this.connectionString);
+            return this.createFunction(this.connectionString);
         }
 
         /// <summary>
