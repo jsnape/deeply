@@ -109,7 +109,11 @@
     <Copy SourceFiles="@(_StyleCopAssembies)" DestinationFiles="@(_StyleCopAssembies->'$(_StyleCopDestinationPath)')" />
   </Target>
 
-  <Target Name="Build" DependsOnTargets="RefreshStyleCopAssemblies;SourceAnalysis;Compile;GenerateTestList;Test;">
+  <Target Name="RestorePackages">
+    <Exec WorkingDirectory="$(SourcePath)" Command="$(_NuGetExe) restore %(MSBuildProject.Identity)" />
+  </Target>
+  
+  <Target Name="Build" DependsOnTargets="RefreshStyleCopAssemblies;RestorePackages;SourceAnalysis;Compile;GenerateTestList;Test;">
   </Target>
 
   <Target Name="_AssemblePackage"
