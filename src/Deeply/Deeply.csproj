@@ -55,6 +55,9 @@
     <Compile Include="..\Shared\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\AssemblyInfoVersion.cs">
+      <Link>Properties\AssemblyInfoVersion.cs</Link>
+    </Compile>
     <Compile Include="CompositeTask.cs" />
     <Compile Include="DbConnectionFactory{T}.cs" />
     <Compile Include="DbConnectionFactory.cs" />

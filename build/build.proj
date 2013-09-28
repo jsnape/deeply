@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Label="Default values">
+    <Configuration>Release</Configuration>
+    <Platform>Any CPU</Platform>
+    <ProductName>Deeply</ProductName>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Dependency versions">
+    <XunitVersion>1.9.2</XunitVersion>  
+  </PropertyGroup>
+  
+  <PropertyGroup Label="Build paths">
+    <RootPath>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\'))</RootPath>
+    <BuildPath>$(RootPath)build\</BuildPath>
+    <SourcePath>$(RootPath)src\</SourcePath>
+    <OutputPath>$(RootPath)output\</OutputPath>
+    <PackagePath>$(RootPath)package\</PackagePath>
+    <XunitPath>$(SourcePath)packages\xunit.runners.$(XunitVersion)\tools\</XunitPath>
+    <CodeAnalysisDictionary>$(SourcePath)Shared\CodeAnalysisDictionary.xml</CodeAnalysisDictionary>
+    <CodeAnalysisRuleSet>$(SourcePath)Shared\Deeply.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
+
+  <ItemGroup Label="Visual Studio Solutions and Projects to MSBuild">
+    <MSBuildProject Include="$(SourcePath)deeply.sln">
+      <AdditionalProperties>Configuration=$(Configuration);Platform=$(Platform);CodeAnalysisDictionary=$(CodeAnalysisDictionary);CodeAnalysisRuleSet=$(CodeAnalysisRuleSet);RunCodeAnalysis=True</AdditionalProperties>
+    </MSBuildProject>
+  </ItemGroup>
+
+  <!-- This has to be wrapped in a target to ensure it executes are the code has been built -->
+  <Target Name="GenerateTestList">
+    <ItemGroup Label="Unit Test Assemblies">
+      <UnitTestAssembly Include="$(OutputPath)$(ProductName)*.Tests.dll"/>
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup Label="C# Source files">
+    <SourceFiles Include="$(SourcePath)**\*.cs" Exclude="$(SourcePath)**\obj\**\*.cs" />
+  </ItemGroup>
+
+  <Target Name="GeneratePackingList">
+    <ItemGroup Label="Package Files">
+      <PackageSources Include="$(OutputPath)Deeply.dll">
+        <PackageSubfolder>lib\net45\</PackageSubfolder>
+      </PackageSources>
+      <PackageSources Include="$(SourcePath)$(ProductName).nuspec">
+        <PackageSubfolder></PackageSubfolder>
+      </PackageSources>
+    </ItemGroup>
+  </Target>
+
+  <!-- Implementation details below here. -->
+  
+  <UsingTask AssemblyFile="$(XunitPath)xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.xunit" />
+  <UsingTask AssemblyFile="$(BuildPath)StyleCop.dll" TaskName="StyleCopTask"/>
+
+  <Target Name="Clean">
+    <ItemGroup>
+      <FilesToClean Include="$(OutputPath)**" />
+      <FilesToClean Include="$(PackagePath)**" />
+    </ItemGroup>
+    
+    <MSBuild Projects="@(MSBuildProject)" Targets="Clean" BuildInParallel="true"/>
+    <Delete Files="@(FilesToClean)" />
+    <RemoveDir Directories="%(FilesToClean.RecursiveDir)" />
+    <RemoveDir Directories="$(OutputPath);$(PackagePath)" />
+  </Target>
+
+  <Target Name="SourceAnalysis">
+    <StyleCopTask
+      ProjectFullPath="$(OutputPath)"
+      SourceFiles="@(SourceFiles)"
+      ForceFullAnalysis="true"
+      TreatErrorsAsWarnings="false"
+      CacheResults="true"
+      OutputFile="StyleCopViolations.xml"
+      MaxViolationCount="0">
+      <Output TaskParameter="ViolationCount" PropertyName="StyleCopViolationCount" />
+    </StyleCopTask>
+  </Target>
+
+  <Target Name="Compile">
+    <MSBuild Projects="@(MSBuildProject)" Targets="Build" BuildInParallel="true" Properties="OutDir=$(OutputPath);"/>
+  </Target>
+
+  <Target Name="Test">
+    <Message Text="Xunit Assemblies='@(UnitTestAssembly)'" />
+    <Xunit Assemblies="@(UnitTestAssembly)" />
+  </Target>
+  
+  <PropertyGroup>
+    <_StyleCopSourcePath>$(MSBuildProgramFiles32)\StyleCop 4.7\</_StyleCopSourcePath>
+    <_StyleCopDestinationPath>$(BuildPath)%(RecursiveDir)%(FileName)%(Extension)</_StyleCopDestinationPath>
+    <_PackageDestinationPath>$(PackagePath)%(PackageSubfolder)%(RecursiveDir)%(FileName)%(Extension)</_PackageDestinationPath>
+    <_NuGetExe>$(BuildPath)NuGet.exe</_NuGetExe>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <_StyleCopAssembies Include="$(_StyleCopSourcePath)StyleCop.dll" />
+    <_StyleCopAssembies Include="$(_StyleCopSourcePath)StyleCop.CSharp.dll" />
+    <_StyleCopAssembies Include="$(_StyleCopSourcePath)StyleCop.CSharp.Rules.dll" />
+  </ItemGroup>
+
+  <Target Name="RefreshStyleCopAssemblies" 
+          Condition="Exists('$(_StyleCopSourcePath)')"
+          Inputs="@(_StyleCopAssembies)" 
+          Outputs="@(_StyleCopAssembies->'$(_StyleCopDestinationPath)')">
+    <Copy SourceFiles="@(_StyleCopAssembies)" DestinationFiles="@(_StyleCopAssembies->'$(_StyleCopDestinationPath)')" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="RefreshStyleCopAssemblies;SourceAnalysis;Compile;GenerateTestList;Test;">
+  </Target>
+
+  <Target Name="_AssemblePackage"
+          DependsOnTargets="GeneratePackingList"
+          Inputs="@(PackageSources)" 
+          Outputs="@(PackageSources->'$(_PackageDestinationPath)')">
+    <Copy SourceFiles="@(PackageSources)" DestinationFiles="@(PackageSources->'$(_PackageDestinationPath)')"/>
+  </Target>
+
+  <Target Name="Package" DependsOnTargets="_AssemblePackage">
+    <Exec WorkingDirectory="$(PackagePath)" Command="$(_NuGetExe) pack" />
+  </Target>
+
+  <Target Name="Publish" DependsOnTargets="Package">
+    <ItemGroup>
+      <_NuPkgFiles Include="$(PackagePath)$(ProductName)*.nupkg" />
+    </ItemGroup>
+    
+    <Message Text="$(_NuGetExe) push @(_NuPkgFiles->'%(FileName)%(Extension)')" />
+    <Exec WorkingDirectory="$(PackagePath)" Command="$(_NuGetExe) push @(_NuPkgFiles->'%(FileName)%(Extension)')" />
+  </Target>
+
+  <Target Name="All" DependsOnTargets="Build;Package" />
+  
+</Project>

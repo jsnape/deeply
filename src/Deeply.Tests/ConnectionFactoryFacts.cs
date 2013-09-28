@@ -37,7 +37,7 @@ namespace Deeply.Tests
     public static class ConnectionFactoryFacts
     {
         /// <summary>
-        /// Default connection assumes you have localdb installed.
+        /// Default connection assumes you have <c>localdb</c> installed.
         /// </summary>
         private const string LocalDbConnection = "Data Source=(localdb)\v11.0;Integrated Security=True;";
 
@@ -94,7 +94,7 @@ namespace Deeply.Tests
         }
 
         /// <summary>
-        /// When validating any DbExceptions thrown should be cached.
+        /// When validating any <c>DbExceptions</c> thrown should be cached.
         /// </summary>
         [Fact]
         public static void ValidateCachesException()
@@ -142,14 +142,14 @@ namespace Deeply.Tests
 
             var factory = new DbConnectionFactory(LocalDbConnection, c => validConnection);
 
-            const int callCount = 2;
+            const int CallCount = 2;
 
-            for (int i = 0; i < callCount; ++i)
+            for (int i = 0; i < CallCount; ++i)
             {
                 Assert.DoesNotThrow(() => factory.Validate());
             }
 
-            validConnection.Received(callCount).Open();
+            validConnection.Received(CallCount).Open();
         }
     }
 }
