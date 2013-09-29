@@ -11,7 +11,7 @@
     <description>An ETL Framework</description>
     <releaseNotes>Initial pre-release version.</releaseNotes>
     <copyright>Copyright 2013</copyright>
-    <tags>etl sql workflow ssis</tags>
+    <tags>deeply data integration etl sql workflow ssis</tags>
     <dependencies>
       <dependency id="CommonServiceLocator" version="1.0" />
     </dependencies>
