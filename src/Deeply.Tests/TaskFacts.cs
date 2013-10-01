@@ -19,10 +19,13 @@
 namespace Deeply.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Autofac;
     using Deeply.Tests.Fakes;
     using Deeply.Tests.Fixtures;
     using FluentAssertions;
+    using NSubstitute;
     using Ploeh.AutoFixture;
     using Xbehave;
     using Xunit;
@@ -36,7 +39,7 @@ namespace Deeply.Tests
         /// <summary>
         /// Task under test.
         /// </summary>
-        private readonly FakeTask Task = new FakeTask();
+        private readonly FakeTask task = new FakeTask();
 
         /// <summary>
         /// Default construction tests
@@ -77,6 +80,7 @@ namespace Deeply.Tests
             /// <summary>
             /// Two tasks should not have the same default name.
             /// </summary>
+            /// <param name="task2">The second task to compare with.</param>
             [Scenario]
             public void TwoTasksShouldNotHaveTheSameDefaultName(ITask task2)
             {
@@ -117,10 +121,10 @@ namespace Deeply.Tests
             [Fact]
             public void DisabledTasksShouldNotExecute()
             {
-                this.Task.Enabled = false;
-                this.Task.Execute(this.Context);
+                this.task.Enabled = false;
+                this.task.Execute(this.Context);
 
-                Assert.False(this.Task.ExecuteWasCalled);
+                Assert.False(this.task.ExecuteWasCalled);
             }
 
             /// <summary>
@@ -129,10 +133,10 @@ namespace Deeply.Tests
             [Fact]
             public void EnabledTasksShouldExecute()
             {
-                this.Task.Enabled = true;
-                this.Task.Execute(this.Context);
+                this.task.Enabled = true;
+                this.task.Execute(this.Context);
 
-                Assert.True(this.Task.ExecuteWasCalled);
+                Assert.True(this.task.ExecuteWasCalled);
             }
 
             /// <summary>
@@ -144,7 +148,7 @@ namespace Deeply.Tests
                 this.Context.Cancel();
 
                 Assert.Throws<OperationCanceledException>(
-                    () => this.Task.Execute(this.Context));
+                    () => this.task.Execute(this.Context));
             }
 
             /// <summary>
@@ -153,7 +157,7 @@ namespace Deeply.Tests
             [Fact]
             public void SyncThrowsWhenNullContextPassed()
             {
-                Assert.Throws<ArgumentNullException>(() => this.Task.Execute(null));
+                Assert.Throws<ArgumentNullException>(() => this.task.Execute(null));
             }
 
             /// <summary>
@@ -165,7 +169,7 @@ namespace Deeply.Tests
             {
                 try
                 {
-                    await this.Task.ExecuteAsync(null);
+                    await this.task.ExecuteAsync(null);
                     Assert.True(false);
                 }
                 catch (Exception ex)
@@ -186,10 +190,10 @@ namespace Deeply.Tests
             [Fact]
             public void DisabledTasksShouldNotVerify()
             {
-                this.Task.Enabled = false;
-                this.Task.Verify(this.Context);
+                this.task.Enabled = false;
+                this.task.Verify(this.Context);
 
-                Assert.False(this.Task.VerifyWasCalled);
+                Assert.False(this.task.VerifyWasCalled);
             }
 
             /// <summary>
@@ -198,10 +202,10 @@ namespace Deeply.Tests
             [Fact]
             public void EnabledTasksShouldVerify()
             {
-                this.Task.Enabled = true;
-                this.Task.Verify(this.Context);
+                this.task.Enabled = true;
+                this.task.Verify(this.Context);
 
-                Assert.True(this.Task.VerifyWasCalled);
+                Assert.True(this.task.VerifyWasCalled);
             }
 
             /// <summary>
@@ -213,7 +217,7 @@ namespace Deeply.Tests
                 this.Context.Cancel();
 
                 Assert.Throws<OperationCanceledException>(
-                    () => this.Task.Verify(this.Context));
+                    () => this.task.Verify(this.Context));
             }
 
             /// <summary>
@@ -222,7 +226,7 @@ namespace Deeply.Tests
             [Fact]
             public void SyncThrowsWhenNullContextPassed()
             {
-                Assert.Throws<ArgumentNullException>(() => this.Task.Verify(null));
+                Assert.Throws<ArgumentNullException>(() => this.task.Verify(null));
             }
 
             /// <summary>
@@ -234,13 +238,76 @@ namespace Deeply.Tests
             {
                 try
                 {
-                    await this.Task.VerifyAsync(null);
+                    await this.task.VerifyAsync(null);
                     Assert.True(false);
                 }
                 catch (Exception ex)
                 {
                     Assert.IsType<ArgumentNullException>(ex);
                 }
+            }
+        }
+   
+        /// <summary>
+        /// Execution log tests.
+        /// </summary>
+        public sealed class ExecutionLogFacts
+        {
+            /// <summary>
+            /// Log substitute.
+            /// </summary>
+            private IExecutionLog log = Substitute.For<IExecutionLog>();
+
+            /// <summary>
+            /// Task under test.
+            /// </summary>
+            private FakeTask task = new FakeTask();
+
+            /// <summary>
+            /// Task should call the start then success events in turn.
+            /// </summary>
+            [Fact]
+            public void SucceedingTaskShouldRaiseStartThenSuccessEvents()
+            {
+                using (var fixture = new SimpleContextFixture(
+                    b => b.RegisterInstance(this.log).As<IExecutionLog>()))
+                {
+                    this.task.Execute(fixture.Context);
+                }
+
+                this.log.Received(1).TaskStarted(this.task);
+                this.log.Received(1).TaskSucceeded(this.task);
+
+                this.log.DidNotReceiveWithAnyArgs().TaskFailed(null, Arg.Any<string>());
+            }
+
+            /// <summary>
+            /// Failed Task should call the start then failed events in turn.
+            /// </summary>
+            [Fact]
+            public void FailedTaskShouldRaiseStartThenFailedEvents()
+            {
+                this.task.ExecuteFunction =
+                    c => { throw new InvalidOperationException(); };
+
+                using (var fixture = new SimpleContextFixture(
+                    b => b.RegisterInstance(this.log).As<IExecutionLog>()))
+                {
+                    try
+                    {
+                        this.task.Execute(fixture.Context);
+                    }
+                    catch (AggregateException)
+                    {
+                        // This exception type is thrown because we are executing in
+                        // an asynchronous context.
+                    }
+                }
+
+                this.log.Received(1).TaskStarted(this.task);
+                this.log.Received(1).TaskFailed(this.task, Arg.Any<string>());
+
+                this.log.DidNotReceiveWithAnyArgs().TaskSucceeded(null);
             }
         }
     }

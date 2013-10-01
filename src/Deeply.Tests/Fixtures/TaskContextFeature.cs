@@ -27,6 +27,7 @@ namespace Deeply.Tests.Fixtures
     /// <summary>
     /// TaskContextFeature class definition.
     /// </summary>
+    /// <typeparam name="T">The type of task that will be created.</typeparam>
     public class TaskContextFeature<T> : SimpleContextFixture where T : ITask
     {
         /// <summary>
@@ -35,9 +36,9 @@ namespace Deeply.Tests.Fixtures
         private T task;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TaskContextFeature"/> class.
+        /// Initializes a new instance of the <see cref="TaskContextFeature{T}"/> class.
         /// </summary>
-        /// <param name="createTask"></param>
+        /// <param name="createTask">Function used to create the typed task.</param>
         public TaskContextFeature(Func<T> createTask)
         {
             if (createTask == null)

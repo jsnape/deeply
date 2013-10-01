@@ -19,7 +19,10 @@
 namespace Deeply.Tests.Fixtures
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
+    using Autofac;
+    using Autofac.Extras.CommonServiceLocator;
     using Microsoft.Practices.ServiceLocation;
     using Ploeh.AutoFixture;
 
@@ -47,11 +50,33 @@ namespace Deeply.Tests.Fixtures
         /// Initializes a new instance of the <see cref="SimpleContextFixture"/> class.
         /// </summary>
         public SimpleContextFixture()
+            : this(null)
         {
-            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleContextFixture"/> class.
+        /// </summary>
+        /// <param name="registerTypes">Call-back function allowing the user to register additional classes.</param>
+        public SimpleContextFixture(Action<ContainerBuilder> registerTypes)
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<ConsoleExecutionLog>().As<IExecutionLog>();
+
+            if (registerTypes != null)
+            {
+                registerTypes(builder);
+            }
+
+            var container = builder.Build();
+            var locator = new AutofacServiceLocator(container);
+
+            ServiceLocator.SetLocatorProvider(() => locator);
 
             this.fixture = new Fixture();
+
             this.cancellationTokenSource = new CancellationTokenSource();
+
             this.context = new TaskContext(this.cancellationTokenSource);
         }
 
