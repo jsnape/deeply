@@ -28,7 +28,7 @@ namespace Deeply.Tests
     /// <summary>
     /// CompositeTaskFacts Task tests.
     /// </summary>
-    public class CompositeTaskFacts : DefaultTaskContextFixture
+    public class CompositeTaskFacts : SimpleContextFixture
     {
         /// <summary>
         /// Number of tasks used in each sequence.

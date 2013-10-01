@@ -84,8 +84,8 @@
     <Compile Include="ExecuteSqlTaskFacts.cs" />
     <Compile Include="Fakes\FakeConsole.cs" />
     <Compile Include="Fakes\FakeTask.cs" />
-    <Compile Include="Fixtures\DefaultTaskContextFixture.cs" />
-    <Compile Include="Fixtures\SetupServiceLocatorFixture.cs" />
+    <Compile Include="Fixtures\SimpleContextFixture.cs" />
+    <Compile Include="Fixtures\TaskContextFeature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CompositeTaskFacts.cs" />
     <Compile Include="TaskContextFacts.cs" />

@@ -20,8 +20,6 @@ namespace Deeply.Tests
 {
     using System;
     using System.Data;
-    using System.Data.Common;
-    using System.Data.SqlClient;
     using Deeply.Tests.Fixtures;
     using NSubstitute;
     using Xunit;
@@ -29,7 +27,7 @@ namespace Deeply.Tests
     /// <summary>
     /// <see cref="ExecuteSqlTask"/> facts.
     /// </summary>
-    public class ExecuteSqlTaskFacts : DefaultTaskContextFixture
+    public class ExecuteSqlTaskFacts : SimpleContextFixture
     {
         /// <summary>
         /// Default connection factory.

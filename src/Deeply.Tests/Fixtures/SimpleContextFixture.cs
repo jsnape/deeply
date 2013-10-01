@@ -1,5 +1,5 @@
 ﻿#region Copyright (c) 2013 James Snape
-// <copyright file="DefaultTaskContextFixture.cs" company="James Snape">
+// <copyright file="SimpleContextFixture.cs" company="James Snape">
 //  Copyright 2013 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,22 +19,15 @@
 namespace Deeply.Tests.Fixtures
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading;
-    using System.Threading.Tasks;
+    using Microsoft.Practices.ServiceLocation;
+    using Ploeh.AutoFixture;
 
     /// <summary>
-    /// DefaultTaskContextFixture class definition.
+    /// SimpleTaskContextFixture class definition.
     /// </summary>
-    public class DefaultTaskContextFixture : IDisposable
+    public class SimpleContextFixture : IDisposable
     {
-        /// <summary>
-        /// Service locator fixture.
-        /// </summary>
-        private readonly SetupServiceLocatorFixture serviceLocatorFixture;
-
         /// <summary>
         /// Fake context for tests.
         /// </summary>
@@ -46,13 +39,18 @@ namespace Deeply.Tests.Fixtures
         private readonly CancellationTokenSource cancellationTokenSource;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTaskContextFixture"/> class.
+        /// Test fixture instance.
         /// </summary>
-        public DefaultTaskContextFixture()
-        {
-            this.serviceLocatorFixture = new SetupServiceLocatorFixture();
-            this.serviceLocatorFixture.ConfigureServiceLocator();
+        private readonly Fixture fixture;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleContextFixture"/> class.
+        /// </summary>
+        public SimpleContextFixture()
+        {
+            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+
+            this.fixture = new Fixture();
             this.cancellationTokenSource = new CancellationTokenSource();
             this.context = new TaskContext(this.cancellationTokenSource);
         }
@@ -63,6 +61,14 @@ namespace Deeply.Tests.Fixtures
         public ITaskContext Context
         {
             get { return this.context; }
+        }
+
+        /// <summary>
+        /// Gets the test data fixture.
+        /// </summary>
+        public Fixture Fixture
+        {
+            get { return this.fixture; }
         }
 
         /// <summary>

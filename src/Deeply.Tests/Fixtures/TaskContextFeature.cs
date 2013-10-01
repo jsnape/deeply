@@ -1,5 +1,5 @@
 ﻿#region Copyright (c) 2013 James Snape
-// <copyright file="SetupServiceLocatorFixture.cs" company="James Snape">
+// <copyright file="TaskContextFeature.cs" company="James Snape">
 //  Copyright 2013 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,32 +18,42 @@
 
 namespace Deeply.Tests.Fixtures
 {
-    using Microsoft.Practices.ServiceLocation;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
     /// <summary>
-    /// SetupServiceLocatorFixture class definition.
+    /// TaskContextFeature class definition.
     /// </summary>
-    public class SetupServiceLocatorFixture
+    public class TaskContextFeature<T> : SimpleContextFixture where T : ITask
     {
         /// <summary>
-        /// Set once to 
+        /// Task under test.
         /// </summary>
-        private bool initialized;
+        private T task;
 
         /// <summary>
-        /// Configures the service locator.
+        /// Initializes a new instance of the <see cref="TaskContextFeature"/> class.
         /// </summary>
-        /// <remarks>This uses a rather simplistic concurrency mechanism that is OK for testing.</remarks>
-        public void ConfigureServiceLocator()
+        /// <param name="createTask"></param>
+        public TaskContextFeature(Func<T> createTask)
         {
-            if (this.initialized)
+            if (createTask == null)
             {
-                return;
+                throw new ArgumentNullException("createTask");
             }
 
-            this.initialized = true;
+            this.task = createTask();
+        }
 
-            ServiceLocator.SetLocatorProvider(() => new DefaultServiceLocator());
+        /// <summary>
+        /// Gets the task under test.
+        /// </summary>
+        public T Task
+        {
+            get { return this.task; }
         }
     }
 }
