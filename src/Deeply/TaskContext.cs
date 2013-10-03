@@ -33,6 +33,11 @@ namespace Deeply
         private readonly CancellationTokenSource cancellationTokenSource;
 
         /// <summary>
+        /// Execution log.
+        /// </summary>
+        private readonly IExecutionLog log;
+
+        /// <summary>
         /// Initializes a new instance of the TaskContext class.
         /// </summary>
         /// <param name="cancellationTokenSource">A cancellation source.</param>
@@ -45,13 +50,16 @@ namespace Deeply
 
             this.cancellationTokenSource = cancellationTokenSource;
 
-            this.Log = ServiceLocator.Current.GetInstance<IExecutionLog>();
+            this.log = ServiceLocator.Current.GetInstance<IExecutionLog>();
         }
 
         /// <summary>
         /// Gets the execution log.
         /// </summary>
-        public IExecutionLog Log { get; private set; }
+        public IExecutionLog Log 
+        { 
+            get { return this.log; } 
+        }
 
         /// <summary>
         /// Gets the cancellation token.

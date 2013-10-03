@@ -119,7 +119,19 @@ namespace Deeply
 
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            await this.ExecuteInternalAsync(context);
+            context.Log.TaskStarted(this);
+
+            try
+            {
+                await this.ExecuteInternalAsync(context);
+
+                context.Log.TaskSucceeded(this);
+            }
+            catch (Exception ex)
+            {
+                context.Log.TaskFailed(this, ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
