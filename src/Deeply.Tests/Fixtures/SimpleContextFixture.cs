@@ -29,6 +29,12 @@ namespace Deeply.Tests.Fixtures
     /// <summary>
     /// SimpleTaskContextFixture class definition.
     /// </summary>
+    /// <remarks>
+    /// Depending on which is simpler, this class can either be inherited by test classes
+    /// or created and disposed inside test. In the first instance XUnit will automatically
+    /// dispose of the instance but in the second you should use a using or finally block
+    /// to ensure correct disposal.
+    /// </remarks>
     public class SimpleContextFixture : IDisposable
     {
         /// <summary>
@@ -49,6 +55,7 @@ namespace Deeply.Tests.Fixtures
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleContextFixture"/> class.
         /// </summary>
+        /// <remarks>This constructor is normally called when used as a test base class.</remarks>
         public SimpleContextFixture()
             : this(null)
         {
@@ -57,6 +64,7 @@ namespace Deeply.Tests.Fixtures
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleContextFixture"/> class.
         /// </summary>
+        /// <remarks>This constructor is normally used when instantiated in-test.</remarks>
         /// <param name="registerTypes">Call-back function allowing the user to register additional classes.</param>
         public SimpleContextFixture(Action<ContainerBuilder> registerTypes)
         {
