@@ -87,6 +87,7 @@
     </Compile>
     <Compile Include="ConsoleExecutionLogFacts.cs" />
     <Compile Include="ConnectionFactoryFacts.cs" />
+    <Compile Include="ExecuteProcessTaskFacts.cs" />
     <Compile Include="ExecuteSqlTaskFacts.cs" />
     <Compile Include="Fakes\FakeConsole.cs" />
     <Compile Include="Fakes\FakeTask.cs" />

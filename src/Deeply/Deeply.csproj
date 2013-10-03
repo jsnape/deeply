@@ -63,12 +63,18 @@
     <Compile Include="DbConnectionFactory.cs" />
     <Compile Include="ConsoleExecutionLog.cs" />
     <Compile Include="DefaultServiceLocator.cs" />
+    <Compile Include="ExecuteProcessTask.cs" />
     <Compile Include="ExecuteSqlTask.cs" />
     <Compile Include="IDbConnectionFactory.cs" />
     <Compile Include="IExecutionLog.cs" />
     <Compile Include="ITask.cs" />
     <Compile Include="ITaskContext.cs" />
     <Compile Include="ParallelTask.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SequentialTask.cs" />
     <Compile Include="TaskContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,6 +90,12 @@
     <CodeAnalysisDictionary Include="..\Shared\CodeAnalysisDictionary.xml">
       <Link>Properties\CodeAnalysisDictionary.xml</Link>
     </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

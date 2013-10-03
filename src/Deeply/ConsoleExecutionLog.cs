@@ -36,7 +36,7 @@ namespace Deeply
                 throw new ArgumentNullException("task");
             }
 
-            Console.WriteLine("Task Started {0}", task.Name);
+            Console.WriteLine(Properties.Resources.TaskStartedLogFormat, task.Name);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Deeply
                 throw new ArgumentNullException("task");
             }
 
-            Console.WriteLine("Task Succeeded {0}", task.Name);
+            Console.WriteLine(Properties.Resources.TaskSucceededLogFormat, task.Name);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Deeply
                 throw new ArgumentNullException("reason");
             }
 
-            Console.WriteLine("Task Failed {0}: {1}", task.Name, reason);
+            Console.WriteLine(Properties.Resources.TaskFailedLogFormat, task.Name, reason);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Deeply
                 throw new ArgumentNullException("message");
             }
 
-            Console.WriteLine("Task Progress {0} {1:#00}% {2}", task.Name, percentComplete, message);
+            Console.WriteLine(Properties.Resources.TaskProgressLogFormat, task.Name, percentComplete, message);
         }
     }
 }

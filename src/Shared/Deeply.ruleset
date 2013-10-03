@@ -2,6 +2,7 @@
 <RuleSet Name="Deeply rules" Description="This rule set most of rules." ToolsVersion="11.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1020" Action="None" />
     <Rule Id="CA1034" Action="None" />
     <Rule Id="CA1303" Action="None" />
   </Rules>
