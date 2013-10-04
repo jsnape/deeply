@@ -59,16 +59,23 @@
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
     <Compile Include="CompositeTask.cs" />
+    <Compile Include="DataflowTask.cs" />
     <Compile Include="DbConnectionFactory{T}.cs" />
     <Compile Include="DbConnectionFactory.cs" />
     <Compile Include="ConsoleExecutionLog.cs" />
     <Compile Include="DefaultServiceLocator.cs" />
+    <Compile Include="EnumerableDataReader.cs" />
     <Compile Include="ExecuteProcessTask.cs" />
     <Compile Include="ExecuteSqlTask.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IBulkRepository.cs" />
     <Compile Include="IDbConnectionFactory.cs" />
     <Compile Include="IExecutionLog.cs" />
+    <Compile Include="Internals\IBulkCopy.cs" />
+    <Compile Include="Internals\SqlBulkCopyInternal.cs" />
     <Compile Include="ITask.cs" />
     <Compile Include="ITaskContext.cs" />
+    <Compile Include="MappingFunctions.cs" />
     <Compile Include="ParallelTask.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -76,6 +83,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SequentialTask.cs" />
+    <Compile Include="SimpleDataflowTask.cs" />
+    <Compile Include="SqlBulkRepository.cs" />
     <Compile Include="TaskContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskBase.cs" />
@@ -97,6 +106,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

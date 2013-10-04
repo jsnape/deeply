@@ -18,6 +18,7 @@
 
 namespace Deeply.Tests
 {
+    using System;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
@@ -54,6 +55,15 @@ namespace Deeply.Tests
             Arguments = ValidProcessArgs,
             WindowStyle = ProcessWindowStyle.Hidden
         };
+
+        /// <summary>
+        /// Should not throw an exception when verifying an invalid process.
+        /// </summary>
+        [Fact]
+        public static void ShouldThrowWithNullStartInfo()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ExecuteProcessTask(null));
+        }
 
         /// <summary>
         /// Should not throw an exception when verifying an invalid process.

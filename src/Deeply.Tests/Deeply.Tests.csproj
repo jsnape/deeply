@@ -87,14 +87,18 @@
     </Compile>
     <Compile Include="ConsoleExecutionLogFacts.cs" />
     <Compile Include="ConnectionFactoryFacts.cs" />
+    <Compile Include="EnumerableDataReaderFacts.cs" />
     <Compile Include="ExecuteProcessTaskFacts.cs" />
     <Compile Include="ExecuteSqlTaskFacts.cs" />
     <Compile Include="Fakes\FakeConsole.cs" />
+    <Compile Include="Fakes\FakeEntity.cs" />
     <Compile Include="Fakes\FakeTask.cs" />
     <Compile Include="Fixtures\SimpleContextFixture.cs" />
     <Compile Include="Fixtures\TaskContextFeature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CompositeTaskFacts.cs" />
+    <Compile Include="SimpleDataflowTaskFacts.cs" />
+    <Compile Include="SqlBulkRepositoryFacts.cs" />
     <Compile Include="TaskContextFacts.cs" />
     <Compile Include="TaskFacts.cs" />
   </ItemGroup>
