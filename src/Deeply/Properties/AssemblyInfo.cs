@@ -18,6 +18,7 @@
 
 using System.Reflection;
 using System.Resources;
+using System.Runtime.CompilerServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -26,3 +27,5 @@ using System.Resources;
 [assembly: AssemblyDescription("An ETL framework.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: NeutralResourcesLanguage("en")]
+
+[assembly: InternalsVisibleTo("Deeply.Tests, PublicKey = 002400000480000094000000060200000024000052534131000400000100010067298c3caa1a2f0a7793fcedf1320f7a996e227c8ca85f9c4b8ed21a022572cd639afce43b27c09b42175e224342363b6d5bc298f99712241b4b26a46fd0f5211ccba05a1b6576885c5732b50edca7c7257c9a6218b94e9485702959483945b61b74c1d98ce557a9f01d78a49c20b064b782d4ad445a36910c268dc923844cae")]

@@ -28,18 +28,18 @@
     </MSBuildProject>
   </ItemGroup>
 
+  <ItemGroup Label="C# Source files">
+    <SourceFiles Include="$(SourcePath)**\*.cs" Exclude="$(SourcePath)**\obj\**\*.cs" />
+  </ItemGroup>
+
   <!-- This has to be wrapped in a target to ensure it executes are the code has been built -->
-  <Target Name="GenerateTestList">
+  <Target Name="_GenerateTestList">
     <ItemGroup Label="Unit Test Assemblies">
       <UnitTestAssembly Include="$(OutputPath)$(ProductName)*.Tests.dll"/>
     </ItemGroup>
   </Target>
 
-  <ItemGroup Label="C# Source files">
-    <SourceFiles Include="$(SourcePath)**\*.cs" Exclude="$(SourcePath)**\obj\**\*.cs" />
-  </ItemGroup>
-
-  <Target Name="GeneratePackingList">
+  <Target Name="_GeneratePackingList">
     <ItemGroup Label="Package Files">
       <PackageSources Include="$(OutputPath)Deeply.dll">
         <PackageSubfolder>lib\net45\</PackageSubfolder>
@@ -84,7 +84,7 @@
     <MSBuild Projects="@(MSBuildProject)" Targets="Build" BuildInParallel="true" Properties="OutDir=$(OutputPath);"/>
   </Target>
 
-  <Target Name="Test">
+  <Target Name="Test" DependsOnTargets="_GenerateTestList">
     <Message Text="Xunit Assemblies='@(UnitTestAssembly)'" />
     <Xunit Assemblies="@(UnitTestAssembly)" />
   </Target>
@@ -93,6 +93,7 @@
     <_StyleCopSourcePath>$(MSBuildProgramFiles32)\StyleCop 4.7\</_StyleCopSourcePath>
     <_StyleCopDestinationPath>$(BuildPath)%(RecursiveDir)%(FileName)%(Extension)</_StyleCopDestinationPath>
     <_PackageDestinationPath>$(PackagePath)%(PackageSubfolder)%(RecursiveDir)%(FileName)%(Extension)</_PackageDestinationPath>
+    <_Packages>$(PackagePath)$(ProductName)*.nupkg</_Packages>
     <_NuGetExe>$(BuildPath)NuGet.exe</_NuGetExe>
   </PropertyGroup>
 
@@ -102,36 +103,41 @@
     <_StyleCopAssembies Include="$(_StyleCopSourcePath)StyleCop.CSharp.Rules.dll" />
   </ItemGroup>
 
-  <Target Name="RefreshStyleCopAssemblies" 
+  <Target Name="_RefreshStyleCopAssemblies" 
           Condition="Exists('$(_StyleCopSourcePath)')"
           Inputs="@(_StyleCopAssembies)" 
           Outputs="@(_StyleCopAssembies->'$(_StyleCopDestinationPath)')">
     <Copy SourceFiles="@(_StyleCopAssembies)" DestinationFiles="@(_StyleCopAssembies->'$(_StyleCopDestinationPath)')" />
   </Target>
 
-  <Target Name="RestorePackages">
+  <Target Name="_RestorePackages">
     <Exec WorkingDirectory="$(SourcePath)" Command="$(_NuGetExe) restore %(MSBuildProject.Identity)" />
   </Target>
   
-  <Target Name="Build" DependsOnTargets="RefreshStyleCopAssemblies;RestorePackages;SourceAnalysis;Compile;GenerateTestList;Test;">
+  <Target Name="Build" DependsOnTargets="_RefreshStyleCopAssemblies;_RestorePackages;SourceAnalysis;Compile;Test;">
   </Target>
 
   <Target Name="_AssemblePackage"
-          DependsOnTargets="GeneratePackingList"
+          DependsOnTargets="_GeneratePackingList"
           Inputs="@(PackageSources)" 
           Outputs="@(PackageSources->'$(_PackageDestinationPath)')">
     <Copy SourceFiles="@(PackageSources)" DestinationFiles="@(PackageSources->'$(_PackageDestinationPath)')"/>
   </Target>
 
   <Target Name="Package" DependsOnTargets="_AssemblePackage">
+    <ItemGroup>
+      <_NuPkgFiles Include="$(_Packages)" />
+    </ItemGroup>
+
+    <Delete Files="@(_NuPkgFiles)" />
     <Exec WorkingDirectory="$(PackagePath)" Command="$(_NuGetExe) pack" />
   </Target>
 
   <Target Name="Publish" DependsOnTargets="Package">
     <ItemGroup>
-      <_NuPkgFiles Include="$(PackagePath)$(ProductName)*.nupkg" />
+      <_NuPkgFiles Include="$(_Packages)" />
     </ItemGroup>
-    
+
     <Message Text="$(_NuGetExe) push @(_NuPkgFiles->'%(FileName)%(Extension)')" />
     <Exec WorkingDirectory="$(PackagePath)" Command="$(_NuGetExe) push @(_NuPkgFiles->'%(FileName)%(Extension)')" />
   </Target>

@@ -79,6 +79,14 @@ namespace Deeply
         }
 
         /// <summary>
+        /// Gets the underlying connection string.
+        /// </summary>
+        public string ConnectionString
+        {
+            get { return this.connectionString; }
+        }
+
+        /// <summary>
         /// Creates a new database connection instance.
         /// </summary>
         /// <returns>A connection.</returns>

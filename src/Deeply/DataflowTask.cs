@@ -1,5 +1,5 @@
 ﻿#region Copyright (c) 2013 James Snape
-// <copyright file="IDbConnectionFactory.cs" company="James Snape">
+// <copyright file="DataflowTask.cs" company="James Snape">
 //  Copyright 2013 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,32 +18,27 @@
 
 namespace Deeply
 {
-    using System.Data;
+    using System.Threading.Tasks;
 
     /// <summary>
-    /// <c>IDbConnectionFactory</c> interface definition.
+    /// Dataflow Task definition
     /// </summary>
-    public interface IDbConnectionFactory
+    public abstract class DataflowTask : TaskBase
     {
         /// <summary>
-        /// Gets the underlying connection string.
+        /// Initializes a new instance of the <see cref="DataflowTask"/> class.
         /// </summary>
-        string ConnectionString { get; }
+        protected DataflowTask()
+        {
+        }
 
         /// <summary>
-        /// Creates a new database connection instance.
+        /// Initializes a new instance of the <see cref="DataflowTask"/> class.
         /// </summary>
-        /// <returns>A connection.</returns>
-        IDbConnection CreateConnection();
-
-        /// <summary>
-        /// Attempts to make a connection to the underlying database.
-        /// </summary>
-        /// <remarks>
-        /// This value is cached to avoid multiple connections to
-        /// the same destination.
-        /// </remarks>
-        /// <exception cref="DbException">If the connection attempt fails.</exception>
-        void Validate();
+        /// <param name="name">Task name.</param>
+        protected DataflowTask(string name)
+            : base(name)
+        {
+        }
     }
 }
