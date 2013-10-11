@@ -135,11 +135,11 @@
 
   <Target Name="Publish" DependsOnTargets="Package">
     <ItemGroup>
-      <_NuPkgFiles Include="$(_Packages)" />
+      <_NuPkgPublishFiles Include="$(_Packages)" />
     </ItemGroup>
 
-    <Message Text="$(_NuGetExe) push @(_NuPkgFiles->'%(FileName)%(Extension)')" />
-    <Exec WorkingDirectory="$(PackagePath)" Command="$(_NuGetExe) push @(_NuPkgFiles->'%(FileName)%(Extension)')" />
+    <Message Text="$(_NuGetExe) push @(_NuPkgPublishFiles->'%(FileName)%(Extension)')" />
+    <Exec WorkingDirectory="$(PackagePath)" Command="$(_NuGetExe) push @(_NuPkgPublishFiles->'%(FileName)%(Extension)')" />
   </Target>
 
   <Target Name="All" DependsOnTargets="Build;Package" />
