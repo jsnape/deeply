@@ -42,7 +42,7 @@ namespace Deeply
         /// Initializes a new instance of the ParallelTask class.
         /// </summary>
         /// <param name="tasks">A sequence of tasks.</param>
-        public ParallelTask(ITask[] tasks)
+        public ParallelTask(params ITask[] tasks)
             : this((IEnumerable<ITask>)tasks)
         {
         }
@@ -62,7 +62,7 @@ namespace Deeply
         /// </summary>
         /// <param name="name">Task name.</param>
         /// <param name="tasks">A sequence of tasks.</param>
-        public ParallelTask(string name, ITask[] tasks)
+        public ParallelTask(string name, params ITask[] tasks)
             : this(name, (IEnumerable<ITask>)tasks)
         {
         }

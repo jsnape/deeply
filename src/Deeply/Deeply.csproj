@@ -82,6 +82,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ResourceScope.cs" />
     <Compile Include="SequentialTask.cs" />
     <Compile Include="SimpleDataflowTask.cs" />
     <Compile Include="SqlBulkRepository.cs" />

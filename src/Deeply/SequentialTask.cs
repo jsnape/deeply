@@ -42,7 +42,7 @@ namespace Deeply
         /// Initializes a new instance of the SequentialTask class.
         /// </summary>
         /// <param name="tasks">A sequence of tasks.</param>
-        public SequentialTask(ITask[] tasks)
+        public SequentialTask(params ITask[] tasks)
             : this((IEnumerable<ITask>)tasks)
         {
         }
@@ -62,7 +62,7 @@ namespace Deeply
         /// </summary>
         /// <param name="name">Task name.</param>
         /// <param name="tasks">A sequence of tasks.</param>
-        public SequentialTask(string name, ITask[] tasks)
+        public SequentialTask(string name, params ITask[] tasks)
             : this(name, (IEnumerable<ITask>)tasks)
         {
         }
