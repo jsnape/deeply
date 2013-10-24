@@ -19,19 +19,20 @@
 namespace Deeply.AdventureWorks.Loader
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Args;
-    using Args.Help.Formatters;
-    using Autofac;
-    using Autofac.Configuration;
-    using Autofac.Extras.CommonServiceLocator;
-    using CsvHelper;
-    using Deeply;
-    using Deeply.AdventureWorks.Loader.Domain;
-    using Microsoft.Practices.ServiceLocation;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Args;
+using Args.Help.Formatters;
+using Autofac;
+using Autofac.Configuration;
+using Autofac.Extras.CommonServiceLocator;
+using CsvHelper;
+using CsvHelper.Configuration;
+using Deeply;
+using Deeply.AdventureWorks.Loader.Domain;
+using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Main program entry point.
@@ -127,49 +128,26 @@ namespace Deeply.AdventureWorks.Loader
                 tasks.Add(cleanTask);
             }
 
-            List<IDisposable> resources = new List<IDisposable>();
-
-            try
+            using (var builder = new TaskBuilder<Currency>())
             {
                 var currencyFile = Path.Combine(Program.Options.SourcePath, "currency.csv");
-                
-                var currencyReader = new StreamReader(currencyFile);
-                resources.Add(currencyReader);
 
-                var currencySource = new CsvReader(currencyReader);
-                resources.Add(currencySource);
+                var csvConfiguration = new CsvConfiguration { HasHeaderRecord = false, Delimiter = "\t" };
+                csvConfiguration.RegisterClassMap<CurrencyFileMap>();
 
-                currencySource.Configuration.HasHeaderRecord = false;
-                currencySource.Configuration.Delimiter = "\t";
-                currencySource.Configuration.RegisterClassMap<CurrencyFileMap>();
+                var task = builder
+                    .CsvSource(currencyFile, csvConfiguration)
+                    .BulkLoad(
+                        "dbo.DimCurrency",
+                        targetFactory,
+                        new Dictionary<string, string>()
+                        {
+                            { "AlternateKey", "CurrencyAlternateKey" },
+                            { "Name", "CurrencyName" }
+                        })
+                    .Build("Load currency dimension");
 
-                var currencyRepository = new SqlBulkRepository<Currency>(
-                    "dbo.DimCurrency",
-                    targetFactory,
-                    new Dictionary<string, string>()
-                    {
-                        { "AlternateKey", "CurrencyAlternateKey" },
-                        { "Name", "CurrencyName" }
-                    });
-
-                var loadCurrencyTask = new SimpleDataflowTask<Currency, Currency>(
-                    "Load currency dimension",
-                    currencySource.GetRecords<Currency>(),
-                    MappingFunctions.Identity,
-                    currencyRepository);
-
-                var fileScope = new ResourceScope(loadCurrencyTask, resources);
-
-                tasks.Add(fileScope);
-            }
-            catch (Exception)
-            {
-                foreach (var resource in resources)
-                {
-                    resource.Dispose();
-                }
-
-                throw;
+                tasks.Add(task);
             }
 
             return tasks;
