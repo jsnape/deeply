@@ -19,20 +19,19 @@
 namespace Deeply.AdventureWorks.Loader
 {
     using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Args;
-using Args.Help.Formatters;
-using Autofac;
-using Autofac.Configuration;
-using Autofac.Extras.CommonServiceLocator;
-using CsvHelper;
-using CsvHelper.Configuration;
-using Deeply;
-using Deeply.AdventureWorks.Loader.Domain;
-using Microsoft.Practices.ServiceLocation;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Args;
+    using Args.Help.Formatters;
+    using Autofac;
+    using Autofac.Configuration;
+    using Autofac.Extras.CommonServiceLocator;
+    using CsvHelper.Configuration;
+    using Deeply;
+    using Deeply.AdventureWorks.Loader.Domain;
+    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Main program entry point.
@@ -128,14 +127,35 @@ using Microsoft.Practices.ServiceLocation;
                 tasks.Add(cleanTask);
             }
 
-            using (var builder = new TaskBuilder<Currency>())
+            var dimensionTasks = new List<ITask>();
+
+            var currencyTask = BuildCurrencyLoadTask();
+            dimensionTasks.Add(currencyTask);
+
+            var dateTask = BuildDateDimensionLoadTask();
+            dimensionTasks.Add(dateTask);
+
+            tasks.Add(new ParallelTask("Load Dimensions", dimensionTasks));
+
+            return tasks;
+        }
+
+        /// <summary>
+        /// Builds a task to load the currency dimension.
+        /// </summary>
+        /// <returns>A task for loading the currency dimension.</returns>
+        private static ITask BuildCurrencyLoadTask()
+        {
+            var targetFactory = Program.connectionFactories["target"];
+
+            using (var builder = new SimpleDataflowBuilder<Currency>())
             {
                 var currencyFile = Path.Combine(Program.Options.SourcePath, "currency.csv");
 
                 var csvConfiguration = new CsvConfiguration { HasHeaderRecord = false, Delimiter = "\t" };
                 csvConfiguration.RegisterClassMap<CurrencyFileMap>();
 
-                var task = builder
+                return builder
                     .CsvSource(currencyFile, csvConfiguration)
                     .BulkLoad(
                         "dbo.DimCurrency",
@@ -146,11 +166,49 @@ using Microsoft.Practices.ServiceLocation;
                             { "Name", "CurrencyName" }
                         })
                     .Build("Load currency dimension");
-
-                tasks.Add(task);
             }
+        }
 
-            return tasks;
+        /// <summary>
+        /// Builds a task used to load the date dimension.
+        /// </summary>
+        /// <returns>A task used to load the date dimension.</returns>
+        private static ITask BuildDateDimensionLoadTask()
+        {
+            var targetFactory = Program.connectionFactories["target"];
+
+            var dateTarget = new SqlBulkRepository<DateValue>(
+                "dbo.DimDate",
+                targetFactory,
+                new Dictionary<string, string>()
+                {
+                    { "Key", "DateKey" },
+                    { "Value", "FullDateAlternateKey" },
+                    { "DayNumberOfWeek", "DayNumberOfWeek" },
+                    { "EnglishDayNameOfWeek", "EnglishDayNameOfWeek" },
+                    { "SpanishDayNameOfWeek", "SpanishDayNameOfWeek" },
+                    { "FrenchDayNameOfWeek", "FrenchDayNameOfWeek" },
+                    { "DayNumberOfMonth", "DayNumberOfMonth" },
+                    { "DayNumberOfYear", "DayNumberOfYear" },
+                    { "WeekNumberOfYear", "WeekNumberOfYear" },
+                    { "EnglishMonthName", "EnglishMonthName" },
+                    { "SpanishMonthName", "SpanishMonthName" },
+                    { "FrenchMonthName", "FrenchMonthName" },
+                    { "MonthNumberOfYear", "MonthNumberOfYear" },
+                    { "CalendarQuarter", "CalendarQuarter" },
+                    { "CalendarYear", "CalendarYear" },
+                    { "CalendarSemester", "CalendarSemester" },
+                    { "FiscalQuarter", "FiscalQuarter" },
+                    { "FiscalYear", "FiscalYear" },
+                    { "FiscalSemester", "FiscalSemester" }
+                });
+
+            var dateSource = DateSource.GetDateSequence(new DateTime(2005, 01, 01), new DateTime(2010, 12, 31));
+
+            return new SimpleDataflowTask<DateTime, DateValue>(
+                dateSource,
+                s => new DateValue(s),
+                dateTarget);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿#region Copyright (c) 2013 James Snape
-// <copyright file="TaskBuilder.cs" company="James Snape">
+// <copyright file="SimpleDataflowBuilder.cs" company="James Snape">
 //  Copyright 2013 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,20 +19,20 @@
 namespace Deeply.AdventureWorks.Loader
 {
     using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CsvHelper;
-using CsvHelper.Configuration;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using CsvHelper;
+    using CsvHelper.Configuration;
     
     /// <summary>
     /// TaskBuilder class definition.
     /// </summary>
     /// <typeparam name="T">Type of entity being loaded.</typeparam>
-    public class TaskBuilder<T> : IDisposable
+    public class SimpleDataflowBuilder<T> : IDisposable
     {
         /// <summary>
         /// Set of resources to automatically release in case of exception.
@@ -50,9 +50,9 @@ using CsvHelper.Configuration;
         private SqlBulkRepository<T> target;
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="TaskBuilder{T}"/> class.
+        /// Finalizes an instance of the <see cref="SimpleDataflowBuilder{T}"/> class.
         /// </summary>
-        ~TaskBuilder()
+        ~SimpleDataflowBuilder()
         {
             this.Dispose(false);
         }
@@ -90,7 +90,7 @@ using CsvHelper.Configuration;
         /// <param name="configuration">File settings.</param>
         /// <returns>This <c>TaskBuilder</c> instance for fluent calls.</returns>
         [CLSCompliant(false)]
-        public TaskBuilder<T> CsvSource(string path, CsvConfiguration configuration)
+        public SimpleDataflowBuilder<T> CsvSource(string path, CsvConfiguration configuration)
         {
             var reader = new StreamReader(path);
             this.resources.Add(reader);
@@ -110,7 +110,7 @@ using CsvHelper.Configuration;
         /// <param name="connectionFactory">The connection factory.</param>
         /// <param name="columnMappings">The column mappings.</param>
         /// <returns>This <c>TaskBuilder</c> instance for fluent calls.</returns>
-        public TaskBuilder<T> BulkLoad(string tableName, IDbConnectionFactory connectionFactory, IDictionary<string, string> columnMappings)
+        public SimpleDataflowBuilder<T> BulkLoad(string tableName, IDbConnectionFactory connectionFactory, IDictionary<string, string> columnMappings)
         {
             this.target = new SqlBulkRepository<T>(tableName, connectionFactory, columnMappings);
 
