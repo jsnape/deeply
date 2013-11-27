@@ -129,11 +129,14 @@ namespace Deeply.AdventureWorks.Loader
 
             var dimensionTasks = new List<ITask>();
 
-            var currencyTask = BuildCurrencyLoadTask();
-            dimensionTasks.Add(currencyTask);
+            if (Program.Options.FullLoad)
+            {
+                var currencyTask = BuildCurrencyLoadTask();
+                dimensionTasks.Add(currencyTask);
 
-            var dateTask = BuildDateDimensionLoadTask();
-            dimensionTasks.Add(dateTask);
+                var dateTask = BuildDateDimensionLoadTask();
+                dimensionTasks.Add(dateTask);
+            }
 
             tasks.Add(new ParallelTask("Load Dimensions", dimensionTasks));
 

@@ -72,10 +72,12 @@
     <Compile Include="IBulkRepository.cs" />
     <Compile Include="IDbConnectionFactory.cs" />
     <Compile Include="IExecutionLog.cs" />
+    <Compile Include="IKeyMapper.cs" />
     <Compile Include="Internals\IBulkCopy.cs" />
     <Compile Include="Internals\SqlBulkCopyInternal.cs" />
     <Compile Include="ITask.cs" />
     <Compile Include="ITaskContext.cs" />
+    <Compile Include="KeyMapper.cs" />
     <Compile Include="MappingFunctions.cs" />
     <Compile Include="ParallelTask.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
