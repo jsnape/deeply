@@ -78,5 +78,25 @@ delete from dbo.DimSalesReason;
 delete from dbo.DimSalesTerritory;
 delete from dbo.DimScenario;
 ";
+
+        /// <summary>
+        /// Product category surrogate key lookup query.
+        /// </summary>
+        public const string ProductCategoryKeyMap = @"
+select 
+	ProductCategoryKey, 
+	cast(ProductCategoryAlternateKey as nvarchar(20)) as BusinessKey
+from dbo.DimProductCategory with (nolock)
+";
+
+        /// <summary>
+        /// Product subcategory surrogate key lookup query.
+        /// </summary>
+        public const string ProductSubcategoryKeyMap = @"
+select 
+	ProductSubcategoryKey, 
+	cast(ProductSubcategoryAlternateKey as nvarchar(20)) as BusinessKey
+from dbo.DimProductSubcategory with (nolock)
+";
     }
 }

@@ -87,6 +87,7 @@
     <Compile Include="..\Shared\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
+    <Compile Include="ActionTaskFacts.cs" />
     <Compile Include="ConsoleExecutionLogFacts.cs" />
     <Compile Include="ConnectionFactoryFacts.cs" />
     <Compile Include="EnumerableDataReaderFacts.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Fakes\FakeTask.cs" />
     <Compile Include="Fixtures\SimpleContextFixture.cs" />
     <Compile Include="Fixtures\TaskContextFeature.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="KeyMapperFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CompositeTaskFacts.cs" />

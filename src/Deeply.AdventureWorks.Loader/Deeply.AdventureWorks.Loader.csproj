@@ -92,16 +92,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeeplyRegistrationModule.cs" />
+    <Compile Include="Domain\ProductFileMap.cs" />
+    <Compile Include="Domain\Product.cs" />
+    <Compile Include="Domain\ProductSubcategoryFileMap.cs" />
     <Compile Include="Domain\Currency.cs" />
     <Compile Include="Domain\CurrencyFileMap.cs" />
     <Compile Include="Domain\Customer.cs" />
     <Compile Include="Domain\DateValue.cs" />
+    <Compile Include="Domain\ProductCategory.cs" />
+    <Compile Include="Domain\ProductCategoryFileMap.cs" />
+    <Compile Include="Domain\ProductSubcategory.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlQueries.cs" />
     <Compile Include="SimpleDataflowBuilder.cs" />
+    <Compile Include="Workflow\CurrencyLoader.cs" />
+    <Compile Include="Workflow\DateLoader.cs" />
+    <Compile Include="Workflow\ProductLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

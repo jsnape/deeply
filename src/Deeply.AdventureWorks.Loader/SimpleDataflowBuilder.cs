@@ -29,7 +29,7 @@ namespace Deeply.AdventureWorks.Loader
     using CsvHelper.Configuration;
     
     /// <summary>
-    /// TaskBuilder class definition.
+    /// SimpleDataflowBuilder class definition.
     /// </summary>
     /// <typeparam name="T">Type of entity being loaded.</typeparam>
     public class SimpleDataflowBuilder<T> : IDisposable
@@ -43,6 +43,11 @@ namespace Deeply.AdventureWorks.Loader
         /// Source data.
         /// </summary>
         private IEnumerable<T> source;
+
+        /// <summary>
+        /// Mapping function.
+        /// </summary>
+        private Func<T, T> mapEntity = MappingFunctions.Identity;
 
         /// <summary>
         /// Bulk load target.
@@ -73,9 +78,9 @@ namespace Deeply.AdventureWorks.Loader
         /// <returns>A built and configured task.</returns>
         public ITask Build(string taskName)
         {
-            var task = new SimpleDataflowTask<T, T>(taskName, this.source, MappingFunctions.Identity, this.target);
+            var task = new SimpleDataflowTask<T, T>(taskName, this.source, this.mapEntity, this.target);
 
-            var fileScope = new ResourceScope(task, this.resources);
+            var fileScope = new ResourceScope(taskName + " resource scope", task, this.resources);
 
             // Ensure that these resource are disposed of one way xor another.
             this.resources = new HashSet<IDisposable>();
@@ -88,7 +93,7 @@ namespace Deeply.AdventureWorks.Loader
         /// </summary>
         /// <param name="path">File path of the file.</param>
         /// <param name="configuration">File settings.</param>
-        /// <returns>This <c>TaskBuilder</c> instance for fluent calls.</returns>
+        /// <returns>This <c>SimpleDataflowBuilder</c> instance for fluent calls.</returns>
         [CLSCompliant(false)]
         public SimpleDataflowBuilder<T> CsvSource(string path, CsvConfiguration configuration)
         {
@@ -109,10 +114,22 @@ namespace Deeply.AdventureWorks.Loader
         /// <param name="tableName">Name of the table.</param>
         /// <param name="connectionFactory">The connection factory.</param>
         /// <param name="columnMappings">The column mappings.</param>
-        /// <returns>This <c>TaskBuilder</c> instance for fluent calls.</returns>
+        /// <returns>This <c>SimpleDataflowBuilder</c> instance for fluent calls.</returns>
         public SimpleDataflowBuilder<T> BulkLoad(string tableName, IDbConnectionFactory connectionFactory, IDictionary<string, string> columnMappings)
         {
             this.target = new SqlBulkRepository<T>(tableName, connectionFactory, columnMappings);
+
+            return this;
+        }
+        
+        /// <summary>
+        /// Sets up the mapping function.
+        /// </summary>
+        /// <param name="mappingFunction">Function to map with</param>
+        /// <returns>This <c>SimpleDataflowBuilder</c> instance for fluent calls.</returns>
+        public SimpleDataflowBuilder<T> Map(Func<T, T> mappingFunction)
+        {
+            this.mapEntity = mappingFunction;
 
             return this;
         }

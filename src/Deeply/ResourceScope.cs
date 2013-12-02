@@ -96,7 +96,7 @@ namespace Deeply
         /// <summary>
         /// Implementation function for the execution.
         /// </summary>
-        /// <param name="context">Verification context.</param>
+        /// <param name="context">Execution context.</param>
         /// <returns>A task that represents the completion of this execution.</returns>
         protected override async Task ExecuteInternalAsync(ITaskContext context)
         {

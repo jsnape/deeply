@@ -20,7 +20,6 @@ namespace Deeply.AdventureWorks.Loader
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
     using Args;
@@ -28,9 +27,8 @@ namespace Deeply.AdventureWorks.Loader
     using Autofac;
     using Autofac.Configuration;
     using Autofac.Extras.CommonServiceLocator;
-    using CsvHelper.Configuration;
     using Deeply;
-    using Deeply.AdventureWorks.Loader.Domain;
+    using Deeply.AdventureWorks.Loader.Workflow;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -41,7 +39,12 @@ namespace Deeply.AdventureWorks.Loader
         /// <summary>
         /// Cancellation token source.
         /// </summary>
-        private static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+
+        /// <summary>
+        /// List of resources that need disposing at the end of execution.
+        /// </summary>
+        private static readonly IList<IDisposable> Disposables = new List<IDisposable>();
 
         /// <summary>
         /// Set of connection factories.
@@ -73,17 +76,27 @@ namespace Deeply.AdventureWorks.Loader
             Console.CancelKeyPress += (s, e) =>
             {
                 Console.WriteLine("Cancellation requested, please wait.");
-                Program.cancellationTokenSource.Cancel();
+                Program.CancellationTokenSource.Cancel();
             };
 
-            Console.WriteLine("Initializing connection factories");
-            Program.connectionFactories = CreateConnectionFactories();
+            try
+            {
+                Console.WriteLine("Initializing connection factories");
+                Program.connectionFactories = CreateConnectionFactories();
 
-            Console.WriteLine("Building loader sequence");
-            var tasks = BuildTasks();
+                Console.WriteLine("Building loader sequence");
+                var tasks = BuildTasks();
 
-            Console.WriteLine("Executing sequence");
-            ExecuteAsync(tasks).Wait();
+                Console.WriteLine("Executing sequence");
+                ExecuteAsync(tasks).Wait();
+            }
+            finally
+            {
+                foreach (var disposable in Program.Disposables)
+                {
+                    disposable.Dispose();
+                }
+            }
         }
 
         /// <summary>
@@ -99,7 +112,7 @@ namespace Deeply.AdventureWorks.Loader
         {
             var mainTask = new SequentialTask("Main", tasks);
 
-            var context = new TaskContext(Program.cancellationTokenSource);
+            var context = new TaskContext(Program.CancellationTokenSource);
 
             await mainTask.VerifyAsync(context);
 
@@ -131,87 +144,20 @@ namespace Deeply.AdventureWorks.Loader
 
             if (Program.Options.FullLoad)
             {
-                var currencyTask = BuildCurrencyLoadTask();
-                dimensionTasks.Add(currencyTask);
+                var currencyLoader = new CurrencyLoader(targetFactory);
+                dimensionTasks.Add(currencyLoader.Build());
 
-                var dateTask = BuildDateDimensionLoadTask();
-                dimensionTasks.Add(dateTask);
+                var dateLoader = new DateLoader(targetFactory);
+                dimensionTasks.Add(dateLoader.Build());
+
+                var productLoader = new ProductLoader(targetFactory);
+                Program.Disposables.Add(productLoader);                    
+                dimensionTasks.Add(productLoader.Build());
             }
 
             tasks.Add(new ParallelTask("Load Dimensions", dimensionTasks));
 
             return tasks;
-        }
-
-        /// <summary>
-        /// Builds a task to load the currency dimension.
-        /// </summary>
-        /// <returns>A task for loading the currency dimension.</returns>
-        private static ITask BuildCurrencyLoadTask()
-        {
-            var targetFactory = Program.connectionFactories["target"];
-
-            using (var builder = new SimpleDataflowBuilder<Currency>())
-            {
-                var currencyFile = Path.Combine(Program.Options.SourcePath, "currency.csv");
-
-                var csvConfiguration = new CsvConfiguration { HasHeaderRecord = false, Delimiter = "\t" };
-                csvConfiguration.RegisterClassMap<CurrencyFileMap>();
-
-                return builder
-                    .CsvSource(currencyFile, csvConfiguration)
-                    .BulkLoad(
-                        "dbo.DimCurrency",
-                        targetFactory,
-                        new Dictionary<string, string>()
-                        {
-                            { "AlternateKey", "CurrencyAlternateKey" },
-                            { "Name", "CurrencyName" }
-                        })
-                    .Build("Load currency dimension");
-            }
-        }
-
-        /// <summary>
-        /// Builds a task used to load the date dimension.
-        /// </summary>
-        /// <returns>A task used to load the date dimension.</returns>
-        private static ITask BuildDateDimensionLoadTask()
-        {
-            var targetFactory = Program.connectionFactories["target"];
-
-            var dateTarget = new SqlBulkRepository<DateValue>(
-                "dbo.DimDate",
-                targetFactory,
-                new Dictionary<string, string>()
-                {
-                    { "Key", "DateKey" },
-                    { "Value", "FullDateAlternateKey" },
-                    { "DayNumberOfWeek", "DayNumberOfWeek" },
-                    { "EnglishDayNameOfWeek", "EnglishDayNameOfWeek" },
-                    { "SpanishDayNameOfWeek", "SpanishDayNameOfWeek" },
-                    { "FrenchDayNameOfWeek", "FrenchDayNameOfWeek" },
-                    { "DayNumberOfMonth", "DayNumberOfMonth" },
-                    { "DayNumberOfYear", "DayNumberOfYear" },
-                    { "WeekNumberOfYear", "WeekNumberOfYear" },
-                    { "EnglishMonthName", "EnglishMonthName" },
-                    { "SpanishMonthName", "SpanishMonthName" },
-                    { "FrenchMonthName", "FrenchMonthName" },
-                    { "MonthNumberOfYear", "MonthNumberOfYear" },
-                    { "CalendarQuarter", "CalendarQuarter" },
-                    { "CalendarYear", "CalendarYear" },
-                    { "CalendarSemester", "CalendarSemester" },
-                    { "FiscalQuarter", "FiscalQuarter" },
-                    { "FiscalYear", "FiscalYear" },
-                    { "FiscalSemester", "FiscalSemester" }
-                });
-
-            var dateSource = DateSource.GetDateSequence(new DateTime(2005, 01, 01), new DateTime(2010, 12, 31));
-
-            return new SimpleDataflowTask<DateTime, DateValue>(
-                dateSource,
-                s => new DateValue(s),
-                dateTarget);
         }
 
         /// <summary>

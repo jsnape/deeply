@@ -1,5 +1,5 @@
 ﻿#region Copyright (c) 2013 James Snape
-// <copyright file="AssemblyInfoVersion.cs" company="James Snape">
+// <copyright file="ProductFileMap.cs" company="James Snape">
 //  Copyright 2013 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,25 @@
 // </copyright>
 #endregion
 
-using System.Reflection;
-
-[assembly: AssemblyVersion("0.3.0.0")]
-[assembly: AssemblyFileVersion("0.3.0.0")]
-[assembly: AssemblyInformationalVersion("0.3.0.0-alpha")]
+namespace Deeply.AdventureWorks.Loader.Domain
+{
+    using System;
+    using CsvHelper.Configuration;
+    
+    /// <summary>
+    /// CSV file map for product .
+    /// </summary>
+    [CLSCompliant(false)]
+    public class ProductFileMap : CsvClassMap<Product>
+    {
+        /// <summary>
+        /// Called to create the mappings.
+        /// </summary>
+        public override void CreateMap()
+        {
+            Map(m => m.ProductSubcategoryAlternateKey).Index(0); // TODO: Not the correct index.
+            Map(m => m.Name).Index(1);
+            Map(m => m.AlternateKey).Index(2);
+        }
+    }
+}
