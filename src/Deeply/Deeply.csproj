@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="CompositeTask.cs" />
     <Compile Include="ActionTask.cs" />
+    <Compile Include="AsyncActionTask.cs" />
     <Compile Include="DataflowTask.cs" />
     <Compile Include="DateSource.cs" />
     <Compile Include="DbConnectionFactory{T}.cs" />
