@@ -37,6 +37,11 @@ namespace Deeply
         bool Enabled { get; set; }
 
         /// <summary>
+        /// Gets or sets the optional parent of this task.
+        /// </summary>
+        ITask Parent { get; set; }
+
+        /// <summary>
         /// Executes the task synchronously.
         /// </summary>
         /// <remarks>The default implementation just calls <c>ExecuteAsync</c> and waits for the call to complete.</remarks>

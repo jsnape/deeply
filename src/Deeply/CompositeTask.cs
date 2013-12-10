@@ -18,6 +18,7 @@
 
 namespace Deeply
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -48,7 +49,17 @@ namespace Deeply
         protected CompositeTask(string name, IEnumerable<ITask> tasks)
             : base(name)
         {
+            if (tasks == null)
+            {
+                throw new ArgumentNullException("tasks");
+            }
+
             this.tasks = tasks;
+
+            foreach (var task in this.tasks)
+            {
+                task.Parent = this;
+            }
         }
 
         /// <summary>

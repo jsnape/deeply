@@ -75,6 +75,11 @@ namespace Deeply
         public bool Enabled { get; set; }
 
         /// <summary>
+        /// Gets or sets the optional parent of this task.
+        /// </summary>
+        public ITask Parent { get; set; }
+
+        /// <summary>
         /// Gets a task instance that has completed.
         /// </summary>
         protected static Task Complete
