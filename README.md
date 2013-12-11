@@ -15,6 +15,18 @@ This post explains things pretty well: http://snape.me/2013/09/29/im-fed-up-with
 
 # Release Notes #
 
+## Deeply 0.3.0-alpha ##
+
+Added support for the following task types:
+
+* Action and Async Action tasks
+* Resource Scope aids in providing automated clean-up of disposables
+
+There are a couple of useful helpers available in the accompanying AdventureWorks sample:
+
+* DeeplyRegistrationModule demonstrates how to use Autofac as a DI container
+* SimpleDataflowBuilder is a fluent builder pattern for creating data flows whilst correctly managing resource hand-off and disposal during creation 
+
 ## Deeply 0.2.0-alpha ##
 
 Added support for the following task types:
