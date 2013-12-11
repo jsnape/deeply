@@ -80,7 +80,7 @@ namespace Deeply
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
-                waits.Add(task.ExecuteAsync(context));
+                waits.Add(Task.Run(() => task.ExecuteAsync(context), context.CancellationToken));
             }
 
             await Task.WhenAll(waits);
