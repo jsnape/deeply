@@ -90,6 +90,7 @@
     <Compile Include="ActionTaskFacts.cs" />
     <Compile Include="ConsoleExecutionLogFacts.cs" />
     <Compile Include="ConnectionFactoryFacts.cs" />
+    <Compile Include="AsyncActionTaskFacts.cs" />
     <Compile Include="EnumerableDataReaderFacts.cs" />
     <Compile Include="ExecuteProcessTaskFacts.cs" />
     <Compile Include="ExecuteSqlTaskFacts.cs" />

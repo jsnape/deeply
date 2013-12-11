@@ -18,6 +18,7 @@
 
 namespace Deeply.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -71,6 +72,16 @@ namespace Deeply.Tests
 
                 this.tasks[i] = task;
             }
+        }
+
+        /// <summary>
+        /// Null task sequence throws.
+        /// </summary>
+        [Fact]
+        public static void NullTaskSequenceThrows()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new SequentialTask((IEnumerable<ITask>)null));
+            Assert.Equal("tasks", exception.ParamName);
         }
 
         /// <summary>
