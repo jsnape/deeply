@@ -30,7 +30,11 @@ namespace Deeply
         /// <summary>
         /// Task sequence.
         /// </summary>
-        private readonly IEnumerable<ITask> tasks;
+        /// <remarks>
+        /// This used to be an IEnumerable but there were issues with delayed/repeated enumeration.
+        /// As a list the sequence is only enumerated once during construction.
+        /// </remarks>
+        private readonly List<ITask> tasks = new List<ITask>();
 
         /// <summary>
         /// Initializes a new instance of the CompositeTask class.
@@ -54,7 +58,7 @@ namespace Deeply
                 throw new ArgumentNullException("tasks");
             }
 
-            this.tasks = tasks;
+            this.tasks.AddRange(tasks);
 
             foreach (var task in this.tasks)
             {
