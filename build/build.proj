@@ -41,7 +41,7 @@
 
   <Target Name="_GeneratePackingList">
     <ItemGroup Label="Package Files">
-      <PackageSources Include="$(OutputPath)Deeply.dll">
+      <PackageSources Include="$(OutputPath)Deeply.dll;$(OutputPath)Deeply.pdb;$(OutputPath)Deeply.xml">
         <PackageSubfolder>lib\net45\</PackageSubfolder>
       </PackageSources>
       <PackageSources Include="$(SourcePath)$(ProductName).nuspec">
