@@ -1,5 +1,5 @@
 ﻿#region Copyright (c) 2013 James Snape
-// <copyright file="AssemblyInfoVersion.cs" company="James Snape">
+// <copyright file="AssemblyInfo.cs" company="James Snape">
 //  Copyright 2013 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,11 @@
 // </copyright>
 #endregion
 
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-[assembly: SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly", Justification = "Connect Bug:796535")]
-
-[assembly: AssemblyVersion("0.4.0.0")]
-[assembly: AssemblyFileVersion("0.4.0.0")]
-[assembly: AssemblyInformationalVersion("0.4.0.0-alpha")]
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("Deeply.Tools.SsisMetadataToClass")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]

@@ -100,7 +100,6 @@
     <Compile Include="Fakes\FakeTask.cs" />
     <Compile Include="Fixtures\SimpleContextFixture.cs" />
     <Compile Include="Fixtures\TaskContextFeature.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="KeyMapperFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CompositeTaskFacts.cs" />

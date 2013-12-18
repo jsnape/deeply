@@ -1,5 +1,10 @@
-﻿#region Copyright (c) 2013 James Snape
-// <copyright file="AssemblyInfoVersion.cs" company="James Snape">
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Deeply.Tools.SsisMetadataToClass.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="HeaderTemplate" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">#region Copyright (c) 2013 James Snape
+// &lt;copyright file="{0}.cs" company="James Snape"&gt;
 //  Copyright 2013 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,14 +18,9 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-// </copyright>
+// &lt;/copyright&gt;
 #endregion
-
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-
-[assembly: SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly", Justification = "Connect Bug:796535")]
-
-[assembly: AssemblyVersion("0.4.0.0")]
-[assembly: AssemblyFileVersion("0.4.0.0")]
-[assembly: AssemblyInformationalVersion("0.4.0.0-alpha")]
+</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

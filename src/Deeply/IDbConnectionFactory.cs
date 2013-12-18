@@ -43,7 +43,7 @@ namespace Deeply
         /// This value is cached to avoid multiple connections to
         /// the same destination.
         /// </remarks>
-        /// <exception cref="DbException">If the connection attempt fails.</exception>
+        /// <exception cref="System.Data.Common.DbException">If the connection attempt fails.</exception>
         void Validate();
     }
 }
