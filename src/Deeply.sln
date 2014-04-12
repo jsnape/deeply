@@ -13,6 +13,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6861ECAD-E2DF-4839-99AA-5A74210E535C}"
 	ProjectSection(SolutionItems) = preProject
 		..\build\build.proj = ..\build\build.proj
+		Deeply.Extras.nuspec = Deeply.Extras.nuspec
 		Deeply.nuspec = Deeply.nuspec
 	EndProjectSection
 EndProject
