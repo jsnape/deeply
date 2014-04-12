@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeply.AdventureWorks.Loade
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeply.Tools.SsisMetadataToClass", "Deeply.Tools.SsisMetadataToClass\Deeply.Tools.SsisMetadataToClass.csproj", "{8CCEA453-E624-479C-B633-1299F2F6D5E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeply.Extras", "Deeply.Extras\Deeply.Extras.csproj", "{956619FE-9224-4358-B099-F06E15C88881}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deeply.Extras.Tests", "Deeply.Extras.Tests\Deeply.Extras.Tests.csproj", "{AEABBBC7-440D-4A06-B833-D54B2D97A21A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +46,14 @@ Global
 		{8CCEA453-E624-479C-B633-1299F2F6D5E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CCEA453-E624-479C-B633-1299F2F6D5E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CCEA453-E624-479C-B633-1299F2F6D5E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{956619FE-9224-4358-B099-F06E15C88881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{956619FE-9224-4358-B099-F06E15C88881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{956619FE-9224-4358-B099-F06E15C88881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{956619FE-9224-4358-B099-F06E15C88881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEABBBC7-440D-4A06-B833-D54B2D97A21A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEABBBC7-440D-4A06-B833-D54B2D97A21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEABBBC7-440D-4A06-B833-D54B2D97A21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEABBBC7-440D-4A06-B833-D54B2D97A21A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

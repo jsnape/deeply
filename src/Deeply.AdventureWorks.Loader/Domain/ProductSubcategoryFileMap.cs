@@ -28,9 +28,9 @@ namespace Deeply.AdventureWorks.Loader.Domain
     public class ProductSubcategoryFileMap : CsvClassMap<ProductSubcategory>
     {
         /// <summary>
-        /// Called to create the mappings.
+        /// Initializes a new instance of the <see cref="ProductSubcategoryFileMap"/> class.
         /// </summary>
-        public override void CreateMap()
+        public ProductSubcategoryFileMap()
         {
             Map(m => m.AlternateKey).Index(0);
             Map(m => m.ProductCategoryAlternateKey).Index(1);
