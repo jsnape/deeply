@@ -18,8 +18,13 @@
 
 namespace Deeply.Extras
 {
+    using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Threading.Tasks;
+    using CsvHelper;
+    using CsvHelper.Configuration;
     using Deeply;
 
     /// <summary>
@@ -29,14 +34,59 @@ namespace Deeply.Extras
     public class CsvBulkRepository<T> : IBulkRepository<T>
     {
         /// <summary>
+        /// The file name
+        /// </summary>
+        private readonly string fileName;
+
+        /// <summary>
+        /// The CSV configuration
+        /// </summary>
+        private readonly CsvConfiguration configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CsvBulkRepository{T}"/> class.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        public CsvBulkRepository(string fileName)
+            : this(fileName, new CsvConfiguration())
+        {                    
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CsvBulkRepository{T}" /> class.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="configuration">The CSV writer configuration.</param>
+        [CLSCompliant(false)]
+        public CsvBulkRepository(string fileName, CsvConfiguration configuration)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
+            this.fileName = fileName;
+            this.configuration = configuration;
+        }
+
+        /// <summary>
         /// Bulk copies the supplied data into the database.
         /// </summary>
         /// <param name="rows">A row iterator</param>
         /// <param name="context">Task execution context</param>
         /// <returns>A task representing the completion of this function.</returns>
-        public Task BulkCopyAsync(IEnumerable<T> rows, ITaskContext context)
+        public async Task BulkCopyAsync(IEnumerable<T> rows, ITaskContext context)
         {
-            return Task.FromResult(0);
+            var fileWriter = new StreamWriter(this.fileName);
+            using (var csvWriter = new CsvWriter(fileWriter, this.configuration))
+            {
+                await Task.Run(() => csvWriter.WriteRecords((IEnumerable)rows));
+            }
         }
     }
 }

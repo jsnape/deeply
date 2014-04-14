@@ -18,7 +18,9 @@
 
 namespace Deeply.Extras.Tests
 {
+    using System;
     using System.IO;
+    using CsvHelper;
     using Xunit;
 
     /// <summary>
@@ -32,7 +34,27 @@ namespace Deeply.Extras.Tests
         [Fact]
         public static void CsvReaderShouldDisposeOfReader()
         {
-            Assert.False(true, "Was in the middle of implementing this when Claire interrupted.");
+            var csvData = @"COL1,COL2
+Foo,Bar";
+
+            var reader = new StringReader(csvData);
+
+            try
+            {
+                using (var csv = new CsvReader(reader))
+                {
+                    reader = null;
+                }
+            }
+            catch (Exception)
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+
+                throw;
+            }
         }
     }
 }
