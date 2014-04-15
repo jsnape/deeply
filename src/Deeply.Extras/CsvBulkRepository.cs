@@ -44,6 +44,11 @@ namespace Deeply.Extras
         private readonly CsvConfiguration configuration;
 
         /// <summary>
+        /// The create writer function.
+        /// </summary>
+        private readonly Func<string, TextWriter> createWriter;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CsvBulkRepository{T}"/> class.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
@@ -59,6 +64,18 @@ namespace Deeply.Extras
         /// <param name="configuration">The CSV writer configuration.</param>
         [CLSCompliant(false)]
         public CsvBulkRepository(string fileName, CsvConfiguration configuration)
+            : this(fileName, configuration, f => new StreamWriter(f))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CsvBulkRepository{T}" /> class.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="configuration">The CSV writer configuration.</param>
+        /// <param name="createWriter">The writer creation function.</param>
+        [CLSCompliant(false)]
+        public CsvBulkRepository(string fileName, CsvConfiguration configuration, Func<string, TextWriter> createWriter)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
@@ -70,8 +87,14 @@ namespace Deeply.Extras
                 throw new ArgumentNullException("configuration");
             }
 
+            if (createWriter == null)
+            {
+                throw new ArgumentNullException("createWriter");
+            }
+
             this.fileName = fileName;
             this.configuration = configuration;
+            this.createWriter = createWriter;
         }
 
         /// <summary>
@@ -82,7 +105,21 @@ namespace Deeply.Extras
         /// <returns>A task representing the completion of this function.</returns>
         public async Task BulkCopyAsync(IEnumerable<T> rows, ITaskContext context)
         {
-            var fileWriter = new StreamWriter(this.fileName);
+            if (rows == null)
+            {
+                throw new ArgumentNullException("rows");
+            }
+
+            if (context == null)
+            {
+                throw new ArgumentNullException("context");
+            }
+
+            // No need to dispose of this since this next line will fail or the
+            // CsvWriter will own the TextWriter and assume responsibility of
+            // disposal.
+            var fileWriter = this.createWriter(this.fileName);
+
             using (var csvWriter = new CsvWriter(fileWriter, this.configuration))
             {
                 await Task.Run(() => csvWriter.WriteRecords((IEnumerable)rows));
