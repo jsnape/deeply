@@ -15,6 +15,10 @@ This post explains things pretty well: http://snape.me/2013/09/29/im-fed-up-with
 
 # Release Notes #
 
+## Deeply 0.5.0-alpha ##
+
+This release primarily adds a new assembly - Deeply.Extras which contains a number of useful additions such as CsvBulkRepository. This is a separate assembly as there are additional dependencies which some might not want to take on.
+
 ## Deeply 0.3.0-alpha ##
 
 Added support for the following task types:
