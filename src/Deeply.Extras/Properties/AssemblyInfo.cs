@@ -1,6 +1,6 @@
 ﻿#region Copyright (c) 2013 James Snape
-// <copyright file="CurrencyFileMap.cs" company="James Snape">
-//  Copyright 2013 James Snape
+// <copyright file="AssemblyInfo.cs" company="James Snape">
+//  Copyright 2014 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -16,24 +16,13 @@
 // </copyright>
 #endregion
 
-namespace Deeply.AdventureWorks.Loader.Domain
-{
-    using System;
-    using CsvHelper.Configuration;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.CompilerServices;
 
-    /// <summary>
-    /// CSV file map for currency.
-    /// </summary>
-    [CLSCompliant(false)]
-    public class CurrencyFileMap : CsvClassMap<Currency>
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CurrencyFileMap"/> class.
-        /// </summary>
-        public CurrencyFileMap()
-        {
-            Map(m => m.AlternateKey).Index(0);
-            Map(m => m.Name).Index(1);
-        }
-    }
-}
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("Deeply.Extras")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]

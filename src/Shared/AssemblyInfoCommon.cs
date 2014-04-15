@@ -1,6 +1,6 @@
 ﻿#region Copyright (c) 2013 James Snape
 // <copyright file="AssemblyInfoCommon.cs" company="James Snape">
-//  Copyright 2013 James Snape
+//  Copyright 2014 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyCompany("James Snape")]
 [assembly: AssemblyProduct("Deeply")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © 2013-2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

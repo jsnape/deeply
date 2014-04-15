@@ -1,6 +1,6 @@
 ﻿#region Copyright (c) 2013 James Snape
-// <copyright file="ProductCategoryFileMap.cs" company="James Snape">
-//  Copyright 2013 James Snape
+// <copyright file="DeeplyRegistrationModule.cs" company="James Snape">
+//  Copyright 2014 James Snape
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -16,24 +16,23 @@
 // </copyright>
 #endregion
 
-namespace Deeply.AdventureWorks.Loader.Domain
+namespace Deeply.Extras
 {
-    using System;
-    using CsvHelper.Configuration;
-    
+    using Autofac;
+    using Deeply;
+
     /// <summary>
-    /// CSV file map for product category.
+    /// Registers Deeply types.
     /// </summary>
-    [CLSCompliant(false)]
-    public class ProductCategoryFileMap : CsvClassMap<ProductCategory>
+    public class DeeplyRegistrationModule : Module
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProductCategoryFileMap"/> class.
+        /// Loads the supplied builder with module specific types.
         /// </summary>
-        public ProductCategoryFileMap()
+        /// <param name="builder">Container builder instance.</param>
+        protected override void Load(ContainerBuilder builder)
         {
-            Map(m => m.AlternateKey).Index(0);
-            Map(m => m.Name).Index(1);
+            builder.RegisterType<ConsoleExecutionLog>().As<IExecutionLog>();
         }
     }
 }
