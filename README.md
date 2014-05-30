@@ -3,6 +3,8 @@ Deeply
 
 A .NET ETL library.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/tkm50ncatjj56hr5)](https://ci.appveyor.com/project/jsnape/deeply)
+
 # Features #
 
 * Uses the [Task Parallel Library](http://msdn.microsoft.com/en-us/library/dd460717.aspx) for asynchronous workflows
