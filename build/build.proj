@@ -127,9 +127,6 @@
   <Target Name="_RestorePackages">
     <Exec WorkingDirectory="$(SourcePath)" Command="$(_NuGetExe) restore %(MSBuildProject.Identity)" />
   </Target>
-  
-  <Target Name="Build" DependsOnTargets="_RefreshStyleCopAssemblies;_RestorePackages;SourceAnalysis;Compile;Test;">
-  </Target>
 
   <Target Name="_AssemblePackage"
           DependsOnTargets="_GeneratePackingList"
@@ -148,8 +145,11 @@
 
     <Exec WorkingDirectory="%(_NuSpecFiles.RootDir)%(_NuSpecFiles.Directory)" Command="$(_NuGetExe) pack" />
   </Target>
+  
+  <Target Name="Build" DependsOnTargets="_RefreshStyleCopAssemblies;_RestorePackages;SourceAnalysis;Compile;Test;Package">
+  </Target>
 
-  <Target Name="Publish" DependsOnTargets="Package">
+  <Target Name="Publish" DependsOnTargets="Build">
     <ItemGroup>
       <_NuPkgPublishFiles Include="$(_Packages)*.nupkg" />
     </ItemGroup>
@@ -158,6 +158,4 @@
     <Exec WorkingDirectory="%(_NuPkgPublishFiles.RootDir)%(_NuPkgPublishFiles.Directory)" Command="$(_NuGetExe) push @(_NuPkgPublishFiles->'%(FileName)%(Extension)')" />
   </Target>
 
-  <Target Name="All" DependsOnTargets="Build;Package" />
-  
 </Project>

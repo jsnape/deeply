@@ -57,8 +57,9 @@
     <AssemblyOriginatorKeyFile>..\deeply.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Args">
-      <HintPath>..\packages\Args.1.1.1\lib\Net40\Args.dll</HintPath>
+    <Reference Include="Args, Version=1.1.0.37402, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Args.1.1.2\lib\Net40\Args.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
