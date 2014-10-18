@@ -20,6 +20,7 @@ namespace Deeply.AdventureWorks.Loader
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
     using Args;
@@ -59,6 +60,7 @@ namespace Deeply.AdventureWorks.Loader
         /// <summary>
         /// Gets the global container.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Will shortly need this")]
         public static IContainer Container { get; private set; }
 
         /// <summary>

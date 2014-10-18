@@ -2,23 +2,23 @@
 <package >
   <metadata>
     <id>Deeply.Extras</id>
-    <version>0.5.2-alpha</version>
+    <version>0.5.3</version>
     <authors>James Snape</authors>
     <owners>James Snape</owners>
     <licenseUrl>https://github.com/jsnape/deeply/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/jsnape/deeply</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Non-core implementations for Deeply based on CsvHelper and Autofac</description>
-    <releaseNotes>Initial pre-release version.</releaseNotes>
+    <releaseNotes>Initial version.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>deeply data integration etl sql workflow ssis</tags>
     <dependencies>
-      <dependency id="Deeply" version="0.5.2-alpha" />
+      <dependency id="Deeply" version="0.5.3" />
       <dependency id="CommonServiceLocator" version="1.3" />
-      <dependency id="Autofac" version="3.5.0" />
+      <dependency id="Autofac" version="3.5.2" />
       <dependency id="Autofac.Configuration" version="3.3.0" />
       <dependency id="Autofac.Extras.CommonServiceLocator" version="3.2.0" />
-      <dependency id="CsvHelper" version="2.7.0" />
+      <dependency id="CsvHelper" version="2.8.2" />
     </dependencies>
   </metadata>
 </package>
